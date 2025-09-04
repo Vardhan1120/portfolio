@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio • Vardhan Uppala</title>
+    <style>
+      :root {
+        /* Colors: 1 accent + neutrals */
+        --bg: #0b0b0b;
+        --text: #e6edf3;
+        --muted: #9aa4ae;
+        --accent: #22d3ee;
+        --radius: 18px;
+        --frame-radius: 28px;
+        --maxw: 1000px;
+      }
+
+      /* Base */
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        line-height: 1.6;
+        background: var(--bg);
+        color: var(--text);
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      nav a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+        border-radius: 10px;
+      }
+
+      /* Page frame */
+      .frame {
+        max-width: var(--maxw);
+        margin: 28px auto;
+        padding: 24px;
+        border: 2px solid var(--accent);
+        border-radius: var(--frame-radius);
+      }
+
+      /* GitHub Heatmap */
+      .github-heatmap {
+        margin-bottom: 24px;
+        text-align: center;
+        padding: 30px;
+        background: color-mix(in srgb, var(--bg) 96%, var(--accent) 4%);
+        border-radius: var(--radius);
+        border: 1px solid rgba(34, 211, 238, 0.15);
+      }
+      .github-heatmap img {
+        max-width: 95%;
+        height: auto;
+        min-height: 130px;
+        border-radius: 8px;
+        filter: brightness(1.05) contrast(1.05);
+        box-shadow: 0 2px 8px rgba(34, 211, 238, 0.08);
+      }
+      .github-heatmap::before {
+        content: "GitHub Activity";
+        display: block;
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 12px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+      }
+
+      /* Nav */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding-top: 6px;
+      }
+      .nav {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: space-between;
+        border: 2px solid var(--accent);
+        border-radius: 999px;
+        padding: 10px 16px;
+        width: 100%;
+        background: rgba(11, 11, 11, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .nav a {
+        text-transform: lowercase;
+        color: var(--text);
+        opacity: 0.9;
+        padding: 6px 10px;
+        border-radius: 999px;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+      .nav a:hover {
+        background: rgba(34, 211, 238, 0.12);
+        color: #fff;
+      }
+      .nav .active {
+        background: rgba(34, 211, 238, 0.18);
+        color: #fff;
+      }
+
+      /* Sections */
+      main {
+        margin-top: 28px;
+      }
+      section {
+        padding: 48px 8px;
+        border-bottom: 1px dashed rgba(34, 211, 238, 0.25);
+        scroll-margin-top: 92px;
+      }
+      section:last-of-type {
+        border-bottom: none;
+      }
+      h1,
+      h2 {
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: #f6fbff;
+      }
+      h1 {
+        font-size: clamp(28px, 5vw, 44px);
+        margin: 0 0 10px;
+      }
+      h2 {
+        font-size: clamp(22px, 3.5vw, 30px);
+        margin: 0 0 14px;
+      }
+      p {
+        color: var(--text);
+        max-width: 70ch;
+        margin: 6px 0 0;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .tag {
+        display: inline-block;
+        border: 1px solid var(--accent);
+        color: #dff8ff;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 0.85rem;
+        margin-right: 8px;
+      }
+
+      /* Resume button */
+      .resume-link {
+        display: inline-block;
+        border: 1px solid var(--accent);
+        color: #dff8ff;
+        background: color-mix(in srgb, var(--bg) 90%, var(--accent) 10%);
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        margin-right: 10px;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(34, 211, 238, 0.08);
+      }
+      .resume-link:hover {
+        background: color-mix(in srgb, var(--bg) 84%, var(--accent) 16%);
+        color: #fff;
+        transform: translateY(-1px);
+      }
+
+      /* Lists */
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+      .card {
+        border: 1.5px solid rgba(34, 211, 238, 0.35);
+        border-radius: var(--radius);
+        padding: 16px;
+        background: color-mix(in srgb, var(--bg) 94%, var(--accent) 6%);
+      }
+      .card h3 {
+        margin: 0 0 6px;
+        font-size: 1.05rem;
+      }
+      .card p {
+        margin: 0;
+        color: var(--muted);
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+        display: inline-block;
+        margin: 0 8px 2px 0;
+      }
+
+      /* Project Links */
+      .project-links {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+      }
+      .social-link {
+        font-size: 0.8rem;
+        color: var(--accent);
+        opacity: 0.8;
+        transition: all 0.2s ease;
+      }
+      .social-link:hover {
+        opacity: 1;
+        color: #fff;
+      }
+
+      /* Social Cards */
+      .social-links {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: 1fr;
+      }
+      .social-card {
+        border: 1.5px solid rgba(34, 211, 238, 0.35);
+        border-radius: var(--radius);
+        padding: 20px;
+        background: color-mix(in srgb, var(--bg) 94%, var(--accent) 6%);
+        transition: all 0.2s ease;
+        display: block;
+      }
+      .social-card:hover {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--bg) 90%, var(--accent) 10%);
+        transform: translateY(-2px);
+      }
+      .social-card h3 {
+        margin: 0 0 8px;
+        font-size: 1.1rem;
+        color: var(--accent);
+      }
+      .social-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      /* Footer */
+      footer {
+        padding: 22px 8px 6px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+
+      /* Responsive Tweaks */
+      @media (max-width: 500px) {
+        body {
+          font-size: 0.95rem;
+          line-height: 1.5;
+        }
+        .frame {
+          margin: 16px auto;
+          padding: 16px;
+        }
+        section {
+          padding: 32px 4px;
+        }
+        h1 {
+          font-size: clamp(24px, 6vw, 32px);
+        }
+        h2 {
+          font-size: clamp(18px, 5vw, 24px);
+        }
+        .github-heatmap img {
+          max-height: 200px;
+          object-fit: contain;
+        }
+      }
+      @media (min-width: 700px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .social-links {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1000px) {
+        .social-links {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Skip link */
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+      }
+      .skip:focus {
+        position: static;
+        width: auto;
+        height: auto;
+        margin-bottom: 10px;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #001117;
+        font-weight: 600;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame">
+      <a class="skip" href="#home">Skip to main content</a>
+
+
+
+      <header aria-label="Primary">
+        <nav class="nav" role="navigation" aria-label="Section navigation">
+          <a class="active" href="#home">home</a>
+          <a href="#about">about</a>
+          <a href="#projects">projects</a>
+          <a href="#papers">research papers</a>
+          <a href="#socials">socials</a>
+        </nav>
+      </header>
+
+      <main id="home">
+        <section aria-labelledby="home-title">
+          <h1 id="home-title">Vardhan Uppala</h1>
+          <p style="margin-top: 14px">
+            I am a B.Tech student in Artificial Intelligence and Machine Learning, passionate about generative AI, predictive modeling, and prompt engineering. I enjoy building practical AI systems and exploring innovative, user-focused solutions.
+          </p>
+          <p style="margin-top: 18px">
+
+            <a href="https://drive.google.com/file/d/1HQNal1QOyZULA5wVHGAbnUejdwN2Ee8V/view?usp=drive_link" target="_blank" class="resume-link">
+              Resume
+            </a>
+          <span class="tag">open to opportunities</span>
+          <span class="tag">remote • onsite</span>
+
+          </p>
+        </section>
+
+        <section id="about" aria-labelledby="about-title">
+          <h2 id="about-title">About</h2>
+          <p>
+            I love working on machine learning and deep learning projects, always curious to learn something new every day. I’m especially interested in research-driven ideas, AI applications, and writing about data-driven solutions.
+          </p>
+          <p class="muted" style="margin-top: 10px">
+            Skills: C++, Python, Scikit-learn, SQL, AI/ML, Web Development (basic).
+          </p>
+        </section>
+
+        <section id="projects" aria-labelledby="projects-title">
+          <h2 id="projects-title">Projects</h2>
+          <div class="grid" role="list">
+            <article class="card" role="listitem">
+              <h3>VoxSwecha (Multilingual Voice web app)</h3>
+              <p>
+                VoxSwecha enables users to translate text, speech, and image descriptions into Indic languages with audio output, designed for accessibility and open-source empowerment.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://code.swecha.org/vardhan1120/voxswecha"
+                  class="social-link"
+                  >Repo</a
+                >
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <h3>Multiple Disease Prediction system</h3>
+              <p>
+                A Python ML app that predicts risks of Diabetes, Heart Disease, Breast Cancer, and Parkinson’s using patient health data.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://github.com/Vardhan1120/DiseasePredictor"
+                  class="social-link"
+                  >Github</a
+                >
+              </div>
+            </article>
+            <article class="card" role="listitem">
+              <h3>Health ChatBot</h3>
+              <p>
+                A Streamlit-based chatbot that answers health-related questions from a custom dataset using TF-IDF and cosine similarity. It provides conversational responses, greeting detection, and daily health tips for users.
+              </p>
+              <div class="project-links">
+                <a
+                  href="https://github.com/Vardhan1120/Health-ChatBot"
+                  class="social-link"
+                  >Github</a
+                >
+              </div>
+            </article>
+          </div>
+          <p class="muted" style="margin-top: 12px">
+            New projects coming soon, currently under work.
+          </p>
+        </section>
+
+        <section id="papers" aria-labelledby="papers-title">
+          <h2 id="papers-title">Research Papers</h2>
+          <ul
+            style="list-style: none; padding: 0; margin: 0"
+            aria-label="Paper list"
+          >
+            <li style="margin-bottom: 12px">
+              <span class="dot" aria-hidden="true"></span>
+              <strong>Multiple Disease Prediction System</strong>
+              <a
+                href="https://zenodo.org/records/15242815"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="
+                  display: inline-block;
+                  margin-left: 8px;
+                  padding: 2px 8px;
+                  background-color: #007bff;
+                  color: white;
+                  border: none;
+                  border-radius: 4px;
+                  text-decoration: none;
+                "
+              >
+                Link
+              </a>
+            
+            </li>
+            <li style="margin-bottom: 12px">
+              <span class="dot" aria-hidden="true"></span>
+              <strong>Deepfakes: Understanding, Detection, and Mitigation in Cyber-Politics and Cyber-Economics</strong>
+              <a
+                href="https://www.igi-global.com/chapter/deepfakes/368106"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="
+                  display: inline-block;
+                  margin-left: 8px;
+                  padding: 2px 8px;
+                  background-color: #007bff;
+                  color: white;
+                  border: none;
+                  border-radius: 4px;
+                  text-decoration: none;
+                "
+              >
+                Link
+              </a>
+            </li>
+            <li style="margin-bottom: 12px">
+              <span class="dot" aria-hidden="true"></span>
+              <strong>Attention is all you need</strong>
+              <a
+                href="https://arxiv.org/abs/1706.03762"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="
+                  display: inline-block;
+                  margin-left: 8px;
+                  padding: 2px 8px;
+                  background-color: #007bff;
+                  color: white;
+                  border: none;
+                  border-radius: 4px;
+                  text-decoration: none;
+                "
+              >
+                Link
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section id="socials" aria-labelledby="socials-title">
+          <h2 id="socials-title">Socials</h2>
+          <div class="social-links">
+            <a
+              href="https://www.linkedin.com/in/vardhan-uppala/"
+              class="social-card"
+              target="_blank"
+              rel="noopener"
+            >
+              <h3>LinkedIn</h3>
+              <p>Connect with me professionally</p>
+            </a>
+            <a
+              href="https://x.com/btwitsvardhan"
+              class="social-card"
+              target="_blank"
+              rel="noopener"
+            >
+              <h3>Twitter</h3>
+              <p>Follow my thoughts and updates</p>
+            </a>
+            <a
+              href="https://github.com/Vardhan1120"
+              class="social-card"
+              target="_blank"
+              rel="noopener"
+            >
+              <h3>GitHub</h3>
+              <p>Check out my code and projects</p>
+            </a>
+            <a
+              href="https://medium.com/@vardhanuppala"
+              class="social-card"
+              target="_blank"
+              rel="noopener"
+            >
+              <h3>Medium</h3>
+              <p>Read my Blogs</p>
+            </a>
+          </div>
+          <p style="margin-top: 12px">
+            Contact: <a href="mailto:vardhanuppala1120@gmail.com">vardhanuppala1120@gmail.com</a> •
+            <a href="tel:8121388899">8121388899</a>
+          </p>
+        </section>
+      </main>
+
+      <footer>
+        <div style="margin-top: 20px">
+          © <span id="y">2025</span> Vardhan Uppala • Built with basic HTML + CSS
+        </div>
+      </footer>
+    </div>
+    <script>
+      document.getElementById("y").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
