@@ -14,6 +14,15 @@
         --radius: 18px;
         --frame-radius: 28px;
         --maxw: 1000px;
+        /* Enhanced theme tokens */
+        --bg-glow-1: #21d3ee20;
+        --bg-glow-2: #7c3aed18;
+        --bg-glow-3: #14b8a620;
+        --card-bg: color-mix(in srgb, var(--bg) 92%, var(--accent) 8%);
+        --glass: rgba(255, 255, 255, 0.035);
+        --shadow-lg: 0 10px 30px rgba(34, 211, 238, 0.12);
+        --shadow-sm: 0 6px 18px rgba(34, 211, 238, 0.08);
+        --ring: 0 0 0 1px rgba(34, 211, 238, 0.35);
       }
 
       /* Base */
@@ -30,6 +39,36 @@
         line-height: 1.6;
         background: var(--bg);
         color: var(--text);
+      }
+      /* Ambient animated background */
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -20% -10% auto -10%;
+        height: 70vh;
+        z-index: -1;
+        background:
+          radial-gradient(40vw 40vw at 10% 20%, var(--bg-glow-1), transparent 60%),
+          radial-gradient(35vw 35vw at 90% 10%, var(--bg-glow-2), transparent 60%),
+          radial-gradient(45vw 45vw at 50% 100%, var(--bg-glow-3), transparent 60%);
+        filter: blur(32px) saturate(140%);
+        opacity: 0.9;
+        pointer-events: none;
+        transform: translateZ(0);
+        animation: floatGlow 18s ease-in-out infinite alternate;
+      }
+      body::after {
+        inset: auto -10% -20% -10%;
+        height: 60vh;
+        opacity: 0.7;
+        animation-duration: 22s;
+        animation-delay: -4s;
+      }
+
+      @keyframes floatGlow {
+        0% { transform: translate3d(0,0,0) scale(1); }
+        100% { transform: translate3d(0,-12px,0) scale(1.03); }
       }
       a {
         color: inherit;
@@ -50,6 +89,12 @@
         padding: 24px;
         border: 2px solid var(--accent);
         border-radius: var(--frame-radius);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+          rgba(11,11,11,0.55);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), var(--shadow-lg);
       }
 
       /* GitHub Heatmap */
@@ -60,6 +105,21 @@
         background: color-mix(in srgb, var(--bg) 96%, var(--accent) 4%);
         border-radius: var(--radius);
         border: 1px solid rgba(34, 211, 238, 0.15);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+      .github-heatmap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.05) 40%, transparent 80%);
+        transform: translateX(-100%);
+        animation: sheen 8s linear infinite;
+      }
+      @keyframes sheen {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
       }
       .github-heatmap img {
         max-width: 95%;
@@ -100,6 +160,7 @@
         -webkit-backdrop-filter: blur(8px);
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        box-shadow: var(--shadow-sm);
       }
       .nav a {
         text-transform: lowercase;
@@ -109,6 +170,7 @@
         border-radius: 999px;
         transition: all 0.2s ease;
         flex-shrink: 0;
+        position: relative;
       }
       .nav a:hover {
         background: rgba(34, 211, 238, 0.12);
@@ -118,7 +180,16 @@
         background: rgba(34, 211, 238, 0.18);
         color: #fff;
       }
-
+      .nav .active::after {
+        content: "";
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 2px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        border-radius: 999px;
+      }
       /* Sections */
       main {
         margin-top: 28px;
@@ -127,9 +198,17 @@
         padding: 48px 8px;
         border-bottom: 1px dashed rgba(34, 211, 238, 0.25);
         scroll-margin-top: 92px;
+        animation: riseIn 600ms ease both;
       }
       section:last-of-type {
         border-bottom: none;
+      }
+      section:nth-of-type(odd) { animation-delay: 80ms; }
+      section:nth-of-type(even) { animation-delay: 140ms; }
+
+      @keyframes riseIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       h1,
       h2 {
@@ -144,6 +223,18 @@
       h2 {
         font-size: clamp(22px, 3.5vw, 30px);
         margin: 0 0 14px;
+        position: relative;
+      }
+      h2::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -8px;
+        width: 72px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        border-radius: 999px;
+        opacity: 0.6;
       }
       p {
         color: var(--text);
@@ -162,6 +253,7 @@
         font-size: 0.85rem;
         margin-right: 8px;
       }
+      .tag:hover { background: rgba(34,211,238,0.12); color: #fff; border-color: var(--accent); }
 
       /* Resume button */
       .resume-link {
@@ -194,8 +286,11 @@
         border: 1.5px solid rgba(34, 211, 238, 0.35);
         border-radius: var(--radius);
         padding: 16px;
-        background: color-mix(in srgb, var(--bg) 94%, var(--accent) 6%);
+        background: var(--card-bg);
+        box-shadow: 0 1px 0 rgba(255,255,255,0.03);
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       }
+      .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-sm); border-color: var(--accent); }
       .card h3 {
         margin: 0 0 6px;
         font-size: 1.05rem;
@@ -240,15 +335,11 @@
         border: 1.5px solid rgba(34, 211, 238, 0.35);
         border-radius: var(--radius);
         padding: 20px;
-        background: color-mix(in srgb, var(--bg) 94%, var(--accent) 6%);
-        transition: all 0.2s ease;
+        background: var(--card-bg);
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
         display: block;
       }
-      .social-card:hover {
-        border-color: var(--accent);
-        background: color-mix(in srgb, var(--bg) 90%, var(--accent) 10%);
-        transform: translateY(-2px);
-      }
+      .social-card:hover { border-color: var(--accent); background: color-mix(in srgb, var(--bg) 90%, var(--accent) 10%); transform: translateY(-3px); box-shadow: var(--shadow-sm); }
       .social-card h3 {
         margin: 0 0 8px;
         font-size: 1.1rem;
@@ -266,6 +357,8 @@
         color: var(--muted);
         font-size: 0.9rem;
         text-align: center;
+        border-top: 1px dashed rgba(34, 211, 238, 0.25);
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
       }
 
       /* Responsive Tweaks */
@@ -277,6 +370,7 @@
         .frame {
           margin: 16px auto;
           padding: 16px;
+          border-radius: 22px;
         }
         section {
           padding: 32px 4px;
@@ -356,7 +450,7 @@
           </p>
           <p style="margin-top: 18px">
 
-            <a href="https://drive.google.com/file/d/1HQNal1QOyZULA5wVHGAbnUejdwN2Ee8V/view?usp=drive_link" target="_blank" class="resume-link">
+            <a href="https://drive.google.com/file/d/1yMECJav-sBxIfFKY-Hl2OJBazlxVxJ1F/view?usp=sharing" target="_blank" rel="noopener" class="resume-link">
               Resume
             </a>
           <span class="tag">open to opportunities</span>
@@ -375,53 +469,69 @@
           </p>
         </section>
 
-        <section id="projects" aria-labelledby="projects-title">
-          <h2 id="projects-title">Projects</h2>
-          <div class="grid" role="list">
-            <article class="card" role="listitem">
-              <h3>VoxSwecha (Multilingual Voice web app)</h3>
-              <p>
-                VoxSwecha enables users to translate text, speech, and image descriptions into Indic languages with audio output, designed for accessibility and open-source empowerment.
-              </p>
-              <div class="project-links">
-                <a
-                  href="https://code.swecha.org/vardhan1120/voxswecha"
-                  class="social-link"
-                  >Repo</a
-                >
-              </div>
-            </article>
-            <article class="card" role="listitem">
-              <h3>Multiple Disease Prediction system</h3>
-              <p>
-                A Python ML app that predicts risks of Diabetes, Heart Disease, Breast Cancer, and Parkinson’s using patient health data.
-              </p>
-              <div class="project-links">
-                <a
-                  href="https://github.com/Vardhan1120/DiseasePredictor"
-                  class="social-link"
-                  >Github</a
-                >
-              </div>
-            </article>
-            <article class="card" role="listitem">
-              <h3>Health ChatBot</h3>
-              <p>
-                A Streamlit-based chatbot that answers health-related questions from a custom dataset using TF-IDF and cosine similarity. It provides conversational responses, greeting detection, and daily health tips for users.
-              </p>
-              <div class="project-links">
-                <a
-                  href="https://github.com/Vardhan1120/Health-ChatBot"
-                  class="social-link"
-                  >Github</a
-                >
-              </div>
-            </article>
-          </div>
-          <p class="muted" style="margin-top: 12px">
-            New projects coming soon, currently under work.
-          </p>
-        </section>
+<section id="projects" aria-labelledby="projects-title">
+  <h2 id="projects-title">Projects</h2>
+  <div class="grid" role="list">
+    <article class="card" role="listitem">
+      <h3>VoxSwecha (Multilingual Voice web app)</h3>
+      <p>
+        VoxSwecha enables users to translate text, speech, and image descriptions into Indic languages with audio output, designed for accessibility and open-source empowerment.
+      </p>
+      <div class="project-links">
+        <a
+          href="https://voxswecha-main-7h33.onrender.com/"
+          class="social-link"
+          >Live link</a
+        >
+      </div>
+    </article>
+    <article class="card" role="listitem">
+      <h3>Multiple Disease Prediction system</h3>
+      <p>
+        A Python ML app that predicts risks of Diabetes, Heart Disease, Breast Cancer, and Parkinson’s using patient health data.
+      </p>
+      <div class="project-links">
+        <a
+          href="https://diseasepredictor-rwknfxkwed7qnyg8acah7j.streamlit.app/"
+          class="social-link"
+          >Live link</a
+        >
+      </div>
+    </article>
+    <article class="card" role="listitem">
+      <h3>Health ChatBot</h3>
+      <p>
+        A Streamlit-based chatbot that answers health-related questions from a custom dataset using TF-IDF and cosine similarity. It provides conversational responses, greeting detection, and daily health tips for users.
+      </p>
+      <div class="project-links">
+        <a
+          href="https://github.com/Vardhan1120/Health-ChatBot"
+          class="social-link"
+          >Github</a
+        >
+      </div>
+    </article>
+
+    <!-- New project placeholder -->
+    <article class="card" role="listitem">
+      <h3>AI Database Assistant</h3>
+      <p>
+        Built and deployed an AI data assistant (Streamlit + Gemini) that converts natural language to SQL, executes securely on SQLite/CSV, and auto-visualizes results.
+      </p>
+      <div class="project-links">
+        <a
+          href="https://ai-database-assistant.streamlit.app/"
+          class="social-link"
+        >Live link</a>
+      </div>
+    </article>
+    
+  </div>
+  <p class="muted" style="margin-top: 12px">
+    New projects coming soon, currently under work.
+  </p>
+</section>
+
 
         <section id="papers" aria-labelledby="papers-title">
           <h2 id="papers-title">Research Papers</h2>
